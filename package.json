@@ -1,0 +1,30 @@
+{
+  "name": "firstproject",
+  "version": "1.0.0",
+  "description": "firstProject",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --inspect index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hyPham-uit/nodejs_firstProject.git"
+  },
+  "keywords": [
+    "nodejs",
+    "firstProject"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hyPham-uit/nodejs_firstProject/issues"
+  },
+  "homepage": "https://github.com/hyPham-uit/nodejs_firstProject#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
