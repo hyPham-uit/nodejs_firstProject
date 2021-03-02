@@ -4,12 +4,22 @@ const morgan = require('morgan');//thêm module morgan để xem được log m�
 const handlebars  = require('express-handlebars');
 const app = express()//đây là đối tượng xây dựng website
 
+const route=require('./routes')
+
 const port = 3000;//run web ở port 3000
 
 //HTTP logger
-app.use(morgan('combined'))
+//app.use(morgan('combined'))
 app.use(express.static(path.join(__dirname, 'public')))//kiểm tra các file tĩnh có trong public khi trình duyệt gọi đường dẫn
 //nghĩa là coi localhost:3000 là thư mục public. Khi gọi http://localhost:3000 là gọi từ file public 
+
+//gọi middleware, xử liệu dữ liệu từ form data submit post lên server:urlencoded
+//phương thức này nằm trong thư viện body parser
+app.use(express.urlencoded({
+  extended: true
+}))
+//gọi middleware, xử liệu dữ liệu javascript gửi lên: XMLHttpRequest, fetch, axios
+app.use(express.json())
 
 //template egine
 app.engine('hbs', handlebars({
@@ -20,14 +30,9 @@ app.set('views', path.join(__dirname, 'resources/views'));//cấu hình vị tr�
 //dirname là vị trí hiện tại, tức là index.js và trỏ tới folder resources/views ngang cấp với file js
 
 //định nghĩa route
-//route tới page home
-app.get('/', (req, res) => {
-  res.render('home');// gọi giao diện homapage
-})
-//route tới page news
-app.get('/news', (req, res) => {
-  res.render('news');// gọi giao diện homapage
-})
+//Route init: khởi tạo route
+route(app);
+//site.js để lưu route các page ko có quá nhiều đường dẫn con, ví dụ như home, about
 
 //127.0.0.1=>localhost
 app.listen(port, () => {
