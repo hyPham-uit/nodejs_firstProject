@@ -1,7 +1,6 @@
 class NewsController {
-
     //[GET] /news
-    index(req, res){
+    index(req, res) {
         res.render('news');
     }
 
@@ -9,9 +8,9 @@ class NewsController {
     //nếu param đó không được cấu hình trong news.js sẽ nhảy vào
     //function này
     //[GET] /news/:slug
-    show(req, res){
-        res.send('NEWS DETAIL')
+    show(req, res) {
+        res.send('NEWS DETAIL');
     }
 }
 
-module.exports=new NewsController;
+module.exports = new NewsController();
