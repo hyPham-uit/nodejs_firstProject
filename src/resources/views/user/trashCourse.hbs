@@ -1,0 +1,87 @@
+ <div class="mt-4">
+   <div>
+     <h3>THÙNG RÁC</h3>
+   </div>
+     
+     <table class="table mt-4">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Tên khóa học</th>
+            <th scope="col">Thời gian xóa</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each courses}}
+        <tr>
+            <th scope="row">{{sum @index 1}}</th>
+            <td>{{this.name}}</td>
+            <td>{{this.deletedAt}}</td>
+            <td>
+              <a href="" class="btn btn-primary btn-restore" data-id="{{this._id}}">Khôi phục</a>
+              <a href="" data-id="{{this._id}}" class="btn btn-danger" data-toggle="modal" data-target="#deleteCourseModal">Xóa vĩnh viễn</a>
+            </td>
+        </tr>
+        {{else}}
+        <tr class="text-center">
+          <td colspan="5">Thùng rác trống. <a href="/user/stored/course">Xem các khóa học của bạn</a></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+ </div>
+
+
+<form id="restoreCourseForm" method="POST" name="restoreCourseForm"></form>
+<form id="deleteCourseForm" method="POST" name="deleteCourseForm"></form>
+
+<!-- form xác nhận xóa -->
+<div class="modal fade" id="deleteCourseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Thông báo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Hành động này không thể khôi phụ. Bạn vẫn muốn xóa khóa học này ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Không</button>
+        <button id="btn-delete-course" type="button" class="btn btn-danger">Xóa vĩnh viễn</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function(){//đợi DOM load hết
+    //xóa vĩnh viễn
+    var courseIdDelete;
+    var deleteForm=document.querySelector('#deleteCourseForm');
+    $('#deleteCourseModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget) 
+      courseIdDelete = button.data('id');//lấy từ thuộc tính data_id ở dòng 21
+    })
+
+    var btnDeleteCourse = document.getElementById('btn-delete-course');
+    btnDeleteCourse.onclick=function(){
+        deleteForm.action=`/courses/${courseIdDelete}/force?_method=DELETE`;
+        deleteForm.submit();
+    }
+
+    //khôi phục
+    var restoreForm=document.querySelector('#restoreCourseForm');
+    var restoreBtn = $('.btn-restore');//lấy ra các thẻ khôi phục
+    restoreBtn.click(function(e){//cài sự kiện khôi phục
+      e.preventDefault();
+      var courseId=$(this).data('id');//lấy từ thuộc tính data-id dòng 21
+      console.log(courseId);
+      restoreForm.action=`/courses/${courseId}/restore?_method=PATCH`;
+      restoreForm.submit();
+  })
+})
+</script>
+ 

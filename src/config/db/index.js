@@ -1,5 +1,3 @@
-const { model } = require('mongoose');
-
 const mongoose = require('mongoose');
 
 async function connect() {
@@ -7,6 +5,8 @@ async function connect() {
         await mongoose.connect('mongodb://localhost:27017/f8_education_learn', {
             useNewUrlParser: true,
             useUnifiedTopology: true,
+            useCreateIndex: true,
+            useNewUrlParser: true,
         });
         console.log('Connect successfully');
     } catch (error) {

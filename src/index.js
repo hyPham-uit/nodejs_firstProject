@@ -3,6 +3,7 @@ const express = require('express'); // đi vào folder node module để lấy t
 const morgan = require('morgan'); //thêm module morgan để xem được log mỗi khi load page
 const handlebars = require('express-handlebars');
 const app = express(); //đây là đối tượng xây dựng website
+var methodOverride = require('method-override');
 
 const route = require('./routes');
 const db = require('./config/db/index');
@@ -32,12 +33,15 @@ app.engine(
     'hbs',
     handlebars({
         extname: '.hbs', //đổi đuôi handlebars thành .hbs cho ngắn gọn
+        helpers: {
+            sum: (a, b) => a + b, //tạo các function bổ sung để sử dụng trong hbs, được gọi ra như biến, nằm trong {{}}
+        },
     }),
 );
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'resources/views')); //cấu hình vị trí lưu file views
 //dirname là vị trí hiện tại, tức là index.js và trỏ tới folder resources/views ngang cấp với file js
-
+app.use(methodOverride('_method'));
 //định nghĩa route
 //Route init: khởi tạo route
 route(app);
@@ -45,5 +49,5 @@ route(app);
 
 //127.0.0.1=>localhost
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
+    console.log(`App listening at http://localhost:${port}`);
 });
