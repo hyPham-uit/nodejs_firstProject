@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const slug = require('mongoose-slug-generator');
-const mongooseDelete = require('mongoose-delete'); //thư viện delete của mongoose
+const slug = require('mongoose-slug-generator'); //use to generator code slug when name of object is the same
+const mongooseDelete = require('mongoose-delete');
 const Schema = mongoose.Schema;
 
-const Course = new Schema(
+const Course = new Schema( //create schema for document Course
     {
         name: { type: String, maxLength: 255, required: true },
         description: { type: String, maxLength: 600 },
@@ -12,7 +12,7 @@ const Course = new Schema(
         slug: { type: String, slug: 'name', unique: true },
     },
     {
-        timestamps: true, // hỗ trợ tạo ra thời gian tạo và thời gian update model
+        timestamps: true, //create and set attribute timeCreate and timeUpdate in document
     },
 );
 
