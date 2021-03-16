@@ -1,51 +1,53 @@
-const path = require('path'); //đây là built-on của nodejs
-const express = require('express'); // đi vào folder node module để lấy thư viên express
-const morgan = require('morgan'); //thêm module morgan để xem được log mỗi khi load page
-const handlebars = require('express-handlebars');
-const app = express(); //đây là đối tượng xây dựng website
-var methodOverride = require('method-override');
+const path = require('path');
+const express = require('express'); // get framework express
+const morgan = require('morgan'); //use for watch log when app has reloaded
+const handlebars = require('express-handlebars'); //handlebar is use to render frontend
+const app = express();
+var methodOverride = require('method-override'); //use to override POST in a form to put, patch, ...
 
-const route = require('./routes');
+const route = require('./routes'); //this file contain routes of app
 const db = require('./config/db/index');
-
+const SortMiddleware = require('./app/middleware/SortMiddleware'); //declare middleware used
 //Connect mongodb
 db.connect();
 
-const port = 3000; //run web ở port 3000
+const port = 3000; //run web at port 3000
 
 //HTTP logger
 //app.use(morgan('combined'))
-app.use(express.static(path.join(__dirname, 'public'))); //kiểm tra các file tĩnh có trong public khi trình duyệt gọi đường dẫn
-//nghĩa là coi localhost:3000 là thư mục public. Khi gọi http://localhost:3000 là gọi từ file public
 
-//gọi middleware, xử liệu dữ liệu từ form data submit post lên server:urlencoded
-//phương thức này nằm trong thư viện body parser
+app.use(express.static(path.join(__dirname, 'public'))); //use to load static files in folder public, just understand that http://localhost:3000 is call to folder public
+
 app.use(
     express.urlencoded({
+        //call middleware to handling data from form data submit method POST
         extended: true,
     }),
 );
-//gọi middleware, xử liệu dữ liệu javascript gửi lên: XMLHttpRequest, fetch, axios
+
+//call middleware to handle code javascript submit: XMLHttpRequest, fetch, axios
 app.use(express.json());
 
-//template egine
+//template engine
 app.engine(
     'hbs',
     handlebars({
-        extname: '.hbs', //đổi đuôi handlebars thành .hbs cho ngắn gọn
+        extname: '.hbs', //change extension name of file to hbs
         helpers: {
-            sum: (a, b) => a + b, //tạo các function bổ sung để sử dụng trong hbs, được gọi ra như biến, nằm trong {{}}
+            //use to make function support for render data, variable is call in {{}}
+            sum: (a, b) => a + b,
         },
     }),
 );
+//Custom middleware
+app.use(SortMiddleware);
+
 app.set('view engine', 'hbs');
-app.set('views', path.join(__dirname, 'resources/views')); //cấu hình vị trí lưu file views
+app.set('views', path.join(__dirname, 'resources/views')); //get the place save the views
 //dirname là vị trí hiện tại, tức là index.js và trỏ tới folder resources/views ngang cấp với file js
 app.use(methodOverride('_method'));
-//định nghĩa route
-//Route init: khởi tạo route
+
 route(app);
-//site.js để lưu route các page ko có quá nhiều đường dẫn con, ví dụ như home, about
 
 //127.0.0.1=>localhost
 app.listen(port, () => {

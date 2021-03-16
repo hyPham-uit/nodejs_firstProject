@@ -3,9 +3,10 @@ const { multipleMongooseToObject } = require('../../util/mongoose');
 
 class CourseController {
     //[GET] /user/stored/course
-
     storedCourse(req, res, next) {
-        Promise.all([Course.find({}), Course.countDocumentsDeleted()]) //hàm find ở đây là của mongoose-delete vì đã được override trong model Course
+        let courseQuery = Course.find({});
+        res.json(res.locals._sort);
+        Promise.all([courseQuery, Course.countDocumentsDeleted()]) //hàm find ở đây là của mongoose-delete vì đã được override trong model Course
             .then(([courses, deletedCount]) => {
                 res.render('user/storedCourse', {
                     deletedCount,
